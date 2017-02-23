@@ -46,7 +46,7 @@ class Flyway {
 		if ( this._checkExecutablePromise )
 			return this._checkExecutablePromise;
 
-		const tmpdir = path.resolve(this.options.tmpdir || 'tmp');
+		const tmpdir = path.resolve(this.options.tmpdir || '.tmp/flyway');
 
 		this.options.stdout.write(`Finding flyway\n`);
 		return this._checkExecutablePromise = Promise.resolve()

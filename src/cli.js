@@ -6,7 +6,8 @@ const Flyway  = require( './index' );
 const Promise = require( 'bluebird' );
 const inquirer = require( 'inquirer' );
 program
-	.version( "0.0.1" )
+	.version( require('./package.json').version )
+	.option('-t, --tmp <dir>', 'Temporary directory to install. Defaults to .tmp/flyway' )
 	.option('-n, --no-prompt', 'Disable prompt for user and password' )
 	.option('-d, --database-dir <database>', 'The database running dir' )
 	.arguments('<cmd> [args...] ')
@@ -37,6 +38,7 @@ function runFlywayPromise( cmd, args ) {
 		.then(function() {
 			const flyway = new Flyway({
 				cwd: program.databaseDir,
+				tmpdir: program.tmp,
 				interceptArgs: function( a ) {
 					return interceptArgs( a )
 						.then((a) => a.concat( args ) )
