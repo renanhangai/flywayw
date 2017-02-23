@@ -72,7 +72,7 @@ class Flyway {
 
 	_runCommand( args ) {
 		return this._checkExecutable()
-			.tap( () => this.options.stdout.write(`flyway ${args.map(JSON.stringify).join(" ")}\n====================\n\n`) )
+			.tap( () => this.options.stdout.write(`flyway ${JSON.stringify(args[0])}\n====================\n\n`) )
 			.tap( () => {
 				if ( this.options.interceptArgs )
 					return this.options.interceptArgs( args ).then((a) => args = a);
