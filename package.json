@@ -9,7 +9,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
+  "author": "renanhangai",
   "license": "ISC",
   "dependencies": {
     "bluebird": "^3.4.7",
@@ -22,5 +22,20 @@
     "request-progress": "^3.0.0",
     "tmp": "0.0.31",
     "which": "^1.2.12"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/renanhangai/flywayw.git"
+  },
+  "keywords": [
+    "flyway",
+    "wrapper",
+    "db",
+    "migration"
+  ],
+  "bugs": {
+    "url": "https://github.com/renanhangai/flywayw/issues"
+  },
+  "homepage": "https://github.com/renanhangai/flywayw#readme"
 }
