@@ -8,6 +8,7 @@ const path = require( 'path' );
 const fs = require( 'fs' );
 const URL = require( 'url' );
 const ProgressBar = require( 'progress' );
+const decompress = require( 'decompress' );
 
 function tmppfile( options ) {
 	return new Promise( function( resolve, reject ) {
@@ -27,7 +28,7 @@ function download( url, options ) {
 	const basename = path.basename( urlObj.pathname || url );
 	
 	return tmppfile({ postfix: options.suffix || basename })
-		.then(function( desc ) {
+		.then(function( file ) {
 			return new Promise( function( resolve, reject ) {
 				const stream = options.stream || process.stderr;
 				stream.write( `  Downloading ${basename}\n` );
@@ -43,14 +44,23 @@ function download( url, options ) {
 						bar.update( state.percent );
 					}).on( 'error', reject )
 					.on( 'end', resolve )
-					.pipe( fs.createWriteStream( desc.path, { fd: desc.fd } ))
+					.pipe( fs.createWriteStream( file.path, { fd: file.fd } ))
 				;
 			}).then(function() {
-
-			}).finally(function() {
-				desc.clean();
+				return file;
 			});
 		})
 	;
 }
+
+function downloadDecompress( url, dist, options ) {
+	options = options || {};
+	return download( url, options )
+		.then(function( file ) {
+			return decompress( file.path, dist );
+		})
+	;
+}
+
 module.exports = download;
+module.exports.downloadDecompress = downloadDecompress;
