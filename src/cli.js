@@ -6,7 +6,7 @@ const Flyway  = require( './index' );
 const Promise = require( 'bluebird' );
 const inquirer = require( 'inquirer' );
 program
-	.version( require('./package.json').version )
+	.version( require('../package.json').version )
 	.option('-t, --tmp <dir>', 'Temporary directory to install. Defaults to .tmp/flyway' )
 	.option('-n, --no-prompt', 'Disable prompt for user and password' )
 	.option('-d, --database-dir <database>', 'The database running dir' )
