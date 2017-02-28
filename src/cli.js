@@ -27,8 +27,6 @@ function interceptArgs( args ) {
 			args = args.concat([`-user=${user}`, `-password=${pass}` ]);
 		return args;
 	}).then(function( newargs ) {
-		if ( program.url )
-			newargs = newargs.concat([ `-url=${program.url}` ]);
 		return newargs;
 	});
 }
@@ -45,10 +43,7 @@ function runFlywayPromise( cmd, args ) {
 					;
 				}
 			});
-			if ( cmd === 'migrate' )
-				return flyway.migrate();
-			else
-				throw new Error( `Invalid command ${JSON.stringify(cmd)}` );
+			return flyway.runCommand([cmd]);
 		})
 	;
 };
