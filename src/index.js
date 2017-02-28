@@ -70,7 +70,7 @@ class Flyway {
 		;
 	}
 
-	_runCommand( args ) {
+	runCommand( args ) {
 		return this._checkExecutable()
 			.tap( () => this.options.stdout.write(`flyway ${JSON.stringify(args[0])}\n====================\n\n`) )
 			.tap( () => {
@@ -85,13 +85,6 @@ class Flyway {
 				});
 			})
 		;
-	}
-
-	create() {
-	}
-	
-	migrate() {
-		return this._runCommand(['migrate']);
 	}
 	
 };
