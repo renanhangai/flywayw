@@ -1,6 +1,6 @@
 {
   "name": "flywayw",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Flyway Wrapper",
   "main": "src/index.js",
   "bin": {
