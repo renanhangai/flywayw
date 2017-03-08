@@ -5,6 +5,8 @@ const which   = Promise.promisify( require( 'which' ) );
 const download = require( './Download' );
 const path = require( 'path' );
 const OS = require( 'os' );
+const async = require( 'async' );
+const fs = require( 'fs' );
 const child_process = require( 'child_process' );
 
 const PACKAGES = {
@@ -32,6 +34,49 @@ function spawn( command, args, options ) {
 	});
 }
 
+function listDirs( dir, depth ) {
+	depth = depth | 0;
+	if ( depth <= 0 )
+		return Promise.resolve([dir]);
+	
+	return Promise.fromCallback(function( cb ) {
+		fs.readdir( dir, cb );
+	}).then(function( files ) {
+		files = files.map(function( file ) {
+			return path.resolve( dir, file );
+		});
+		return Promise.fromCallback(function( cb ) {
+			function iterator( file, next ) {
+				fs.stat( file, function( err, stat ) {
+					if ( err ) {
+						next( err );
+						return;
+					}
+					
+					next(null, {
+						file: file,
+						stat: stat
+					});
+				});
+			}
+			async.map( files, iterator, cb );
+		});
+	}).then(function( stats ) {
+		stats = stats.filter(function( f ) { return f.stat.isDirectory(); });
+
+		function iterator( file, next ) {
+			listDirs( file.file, depth - 1 )
+				.asCallback( next )
+			;
+		};
+		return Promise.fromCallback(function(cb) {
+			async.concat( stats, iterator, cb );
+		});
+	}).then(function( dirs ) {
+		return [dir].concat( dirs );
+	});
+};
+
 class Flyway {
 
 	constructor( options ) {
@@ -57,7 +102,11 @@ class Flyway {
 					return process.env.FLYWAY;
 				return which( 'flyway' );
 			}).catch(() => {
-				return which( 'flyway', { path: tmpdir });
+				return listDirs( tmpdir, 2 )
+					.then(function( dirs ) {
+						return which( 'flyway', { path: dirs.join(path.delimiter) } );
+					})
+				;
 			}).catch( () => {
 				const platform = OS.platform();
 				const url = PACKAGES.x64[ platform ];
