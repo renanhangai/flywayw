@@ -12,6 +12,7 @@
   "author": "renanhangai",
   "license": "ISC",
   "dependencies": {
+    "async": "^2.1.5",
     "bluebird": "^3.4.7",
     "commander": "^2.9.0",
     "decompress": "^4.0.0",
